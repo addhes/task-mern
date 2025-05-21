@@ -5,7 +5,7 @@ const { getUser, getUserById, deleteUser } = require("../controllers/userControl
 const router = express.Router();
 
 // User Management routes
-router.get("/", protect,  getUser);
+router.get("/", protect, adminOnly,  getUser);
 router.get("/:id", protect, getUserById);
 router.delete("/:id", protect, adminOnly, deleteUser)
 

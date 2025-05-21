@@ -1,9 +1,6 @@
-import React from 'react'
+import React from "react";
+import AuthLayout from "../../components/AuthLayout";
 
-const Login = () => {
-  return (
-    <div>Login</div>
-  )
+export default function LoginPage() {
+  return ( <AuthLayout>Login</AuthLayout> );
 }
-
-export default Login

@@ -6,7 +6,9 @@
 
  const authRoutes = require("./routes/authRoutes");
  const userRoutes = require("./routes/userRoutes");
-const { connect } = require("http2");
+ const taskRoutes = require("./routes/taskRoutes");
+const reportRoutes = require("./routes/taskRoutes")
+// const { connect } = require("http2");
 
  const app = express();
 
@@ -27,8 +29,8 @@ connectDB();
  // Routes
  app.use("/api/auth", authRoutes);
  app.use("/api/users", userRoutes);
-//  app.use("/api/tasks", taskRoutes);
-//  app.use("/api/reports", reportRoutes);
+ app.use("/api/tasks", taskRoutes);
+ app.use("/api/reports", reportRoutes);
 
  // Start Server
  const PORT = process.env.PORT || 5000;
