@@ -10,6 +10,7 @@ import UserDashboard from './pages/User/UserDashboard'
 import MyTasks from './pages/User/MyTasks'
 import ViewTaskDetails from './pages/User/ViewTaskDetails'
 import PrivateRoute from './routes/PrivateRoute'
+import Daftar from './pages/Auth/Daftar'
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/daftar" element={<Daftar />} />
 
           {/* Admin Routes */}
           <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
