@@ -3,6 +3,8 @@ import AuthLayout from "../../components/AuthLayout";
 import {Link, useNavigate} from 'react-router-dom'
 import Input from "../../components/Input/Input";
 import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -13,6 +15,8 @@ export default function LoginPage() {
 
   // handle login form submit
   const handleLogin = async (e) => {
+    // console.log("LOGIN SUBMITTED");
+    // console.log(e)
     e.preventDefault();
 
     if(!validateEmail(email)) {
@@ -22,9 +26,37 @@ export default function LoginPage() {
 
     if (!password) {
       setError("Please enter the password")
+      return;
     }
 
     setError("");
+
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      })
+
+      const { token, role } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+
+        // redirect based on role
+        if (role === "admin") {
+          navigate("/admin/dashboard")
+        } else {
+          navigate("/user/dashboard")
+        }
+      }
+
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message)
+      } else {
+        setError("Something went wrong. please try again.")
+      }
+    }
   }
 
   return ( <AuthLayout>
@@ -35,7 +67,10 @@ export default function LoginPage() {
       <form onSubmit={handleLogin}>
         <Input 
           value={email}
-          onChange={({ target }) => setEmail(target.value)}
+          onChange={({ target }) =>{
+             setEmail(target.value)
+             if (error) setError(null);
+          }}
           label="Email Address"
           placeholder="jhon@example.com"
           type="text"
@@ -43,7 +78,10 @@ export default function LoginPage() {
 
         <Input 
           value={password}
-          onChange={({ target }) => setPassword(target.value)}
+          onChange={({ target }) => {
+            setPassword(target.value)
+            if (error) setError(null);
+          }}
           label="Password"
           placeholder="Min 8 Characters"
           type="password"
