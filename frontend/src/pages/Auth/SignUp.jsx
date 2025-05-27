@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthLayout from '../../components/AuthLayout';
 import ProfilePhotoSelector from '../../components/Input/ProfilePhotoSelector';
 import Input from '../../components/Input/Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { API_PATHS } from '../../utils/apiPaths';
+import { UserContext } from '../../context/userContext';
+import uploadImage from '../../utils/uploadImage';
+import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
 
 const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -14,9 +18,14 @@ const SignUp = () => {
   
   const [error, setError] = useState(null)
 
+  const {updateUser} = useContext(UserContext)
+  const navigate = useNavigate();
+
 // handle login form submit
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    let profileImageUrl = '';
 
     if (!fullName) {
       setError("Please enter the password")
@@ -35,10 +44,18 @@ const SignUp = () => {
 
     // Signup API CALL
       try {
+      
+      if (profilePic) {
+        const imgUploadRes = await uploadImage(profilePic);
+        // console.log(imgUploadRes)
+        profileImageUrl = imgUploadRes.imageUrl || "";
+      }
+
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: fullName,
         email,
         password,
+        profileImageUrl,
         adminInviteToken
       })
 
@@ -50,7 +67,9 @@ const SignUp = () => {
 
         // redirect based on role
         if(role === "admin") {
-          navigate
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/user/dashboard");
         }
       }
       // signUp API CALL
@@ -58,6 +77,7 @@ const SignUp = () => {
       if (error.response && error.response.data.message) {
         setError(error.response.data.message)
       } else {
+        console.log(error)
         setError("Something went wrong. please try again.")
       }
     }
@@ -101,8 +121,8 @@ const SignUp = () => {
             />
 
             <Input 
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
+              value={adminInviteToken}
+              onChange={({ target }) => setAdminInviteToken(target.value)}
               label="Admin Invite Token"
               placeholder="6 Digit Code"
               type="text"

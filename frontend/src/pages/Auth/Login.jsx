@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthLayout from "../../components/AuthLayout";
 import {Link, useNavigate} from 'react-router-dom'
 import Input from "../../components/Input/Input";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/userContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null)
 
+  const {updateUser} = useContext(UserContext)
   const navigate = useNavigate();
 
   // handle login form submit
