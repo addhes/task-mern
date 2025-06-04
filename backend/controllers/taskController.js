@@ -307,7 +307,7 @@ const getDashboardData = async (req, res) => {
 
     const recentTasks = await Task.find()
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(3)
         .select("title status priority dueDate createdAt");
 
     res.status(200).json({

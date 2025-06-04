@@ -39,7 +39,7 @@ export default function LoginPage() {
         password,
       })
 
-      const { token, role } = response.data;
+      const { token, role } = response.data = {};
 
       if (token) {
         localStorage.setItem("token", token);
@@ -53,10 +53,12 @@ export default function LoginPage() {
       }
 
     } catch (error) {
+      console.log("Login error:", error); // tambahkan ini
+
       if (error.response && error.response.data.message) {
-        setError(error.response.data.message)
+        setError(error.response.data.message);
       } else {
-        setError("Something went wrong. please try again.")
+        setError("Something went wrong. please try again.");
       }
     }
   }
@@ -97,7 +99,7 @@ export default function LoginPage() {
 
         <p className="text-[13px] text-slate-800 mt-3">
           Don't have an account?{" "}
-          <Link className="font-medium text-primary underline" to="/singup">
+          <Link className="font-medium text-primary underline" to="/signup">
             Signup
           </Link>
         </p>
